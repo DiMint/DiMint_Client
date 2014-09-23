@@ -17,7 +17,11 @@ class DiMintClient:
             if not self.__connected:
                 return default
         key = self.__convert_key(key)
-        self.__socket.send('GET::::{0}'.format(key).encode('utf-8'))
+        content = json.dumps({
+            'cmd_type': 'get',
+            'key': key,
+        })
+        self.__socket.send(content.encode('utf-8'))
         res = self.__socket.recv()
         try:
             return json.loads(res.decode('utf-8'))
@@ -30,8 +34,12 @@ class DiMintClient:
             if not self.__connected:
                 return False
         key = self.__convert_key(key)
-        self.__socket.send('SET::::{0}::::{1}'.format(
-            key, json.dumps(value)).encode('utf-8'))
+        content = json.dumps({
+            'cmd_type': 'set',
+            'key': key,
+            'value': value,
+        })
+        self.__socket.send(content.encode('utf-8'))
         res = self.__socket.recv()
         return json.loads(res.decode('utf-8'))
 
@@ -58,9 +66,9 @@ class DiMintClient:
             self.__connected = False
 
     def __convert_key(self, key):
+        if not isinstance(key, (int, float, str, bytes)):
+            raise KeyError('key must be immutable.')
         key = str(key)
-        if '::::' in key:
-            raise KeyError('"::::" cannot be contained in key')
         return key
 
     def __del__(self):
