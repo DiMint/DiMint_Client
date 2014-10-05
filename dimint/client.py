@@ -1,5 +1,4 @@
-import json
-import zmq
+from dimint.connection import Connection
 
 
 class DiMintClient:
@@ -12,36 +11,15 @@ class DiMintClient:
         self.__connect()
 
     def get(self, key, default=None):
-        if not self.__connected:
-            self.connect()
-            if not self.__connected:
-                return default
-        key = self.__convert_key(key)
-        content = json.dumps({
-            'cmd_type': 'get',
-            'key': key,
-        })
-        self.__socket.send(content.encode('utf-8'))
-        res = self.__socket.recv()
         try:
-            return json.loads(res.decode('utf-8'))
-        except TypeError:
+            return self.__connection.get(key)
+        except Exception as e:
+            print(e)
             return default
 
     def set(self, key, value):
-        if not self.__connected:
-            self.connect()
-            if not self.__connected:
-                return False
-        key = self.__convert_key(key)
-        content = json.dumps({
-            'cmd_type': 'set',
-            'key': key,
-            'value': value,
-        })
-        self.__socket.send(content.encode('utf-8'))
-        res = self.__socket.recv()
-        return json.loads(res.decode('utf-8'))
+        result = self.__connection.set(key, value)
+        return result
 
     def __getitem__(self, key):
         return self.get(key)
@@ -50,26 +28,10 @@ class DiMintClient:
         self.set(key, value)
 
     def __connect(self):
-        self.__context = zmq.Context()
-        self.__socket = self.__context.socket(zmq.REQ)
-        try:
-            self.__socket.connect('tcp://{0}:{1}'.format(
-                self.__host, self.__port))
-            self.__connected = True
-        except:
-            pass
+        self.__connection = Connection(self.__host, self.__port)
 
     def __disconnect(self):
-        if self.__connected:
-            self.__socket.disconnect('tcp://{0}:{1}'.format(
-                self.__host, self.__port))
-            self.__connected = False
-
-    def __convert_key(self, key):
-        if not isinstance(key, (int, float, str, bytes)):
-            raise KeyError('key must be immutable.')
-        key = str(key)
-        return key
+        del self.__connection
 
     def __del__(self):
         try:
