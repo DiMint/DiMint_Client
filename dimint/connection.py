@@ -33,7 +33,7 @@ class Connection:
         init_socket = context.socket(zmq.REQ)
         init_socket.connect(self.__init_address)
         init_socket.send(Command.get_overloads_list())
-        self.__overloads = json.loads(init_socket.recv().decode('utf-8'))
+        self.__overloads = json.loads(init_socket.recv().decode('utf-8'))['overloads']
         print(self.__overloads)
         self.__sockets = [context.socket(zmq.REQ)
                           for _ in range(len(self.__overloads))]
