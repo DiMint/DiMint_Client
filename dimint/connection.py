@@ -16,14 +16,14 @@ class Connection:
 
     def get(self, key):
         cmd = Command.get_by_key(key)
-        loc = self.__get_overload_location_by_key(key)
+        loc = self.__get_overlord_location_by_key(key)
         self.__sockets[loc].send(cmd)
         value = self.__sockets[loc].recv()
         return json.loads(value.decode('utf-8'))
 
     def set(self, key, value):
         cmd = Command.set_value(key, value)
-        loc = self.__get_overload_location_by_key(key)
+        loc = self.__get_overlord_location_by_key(key)
         self.__sockets[loc].send(cmd)
         result = self.__sockets[loc].recv()
         return json.loads(result.decode('utf-8'))
@@ -32,14 +32,14 @@ class Connection:
         context = zmq.Context()
         init_socket = context.socket(zmq.REQ)
         init_socket.connect(self.__init_address)
-        init_socket.send(Command.get_overloads_list())
-        self.__overloads = json.loads(init_socket.recv().decode('utf-8'))['overloads']
-        print(self.__overloads)
+        init_socket.send(Command.get_overlords_list())
+        self.__overlords = json.loads(init_socket.recv().decode('utf-8'))['overlords']
+        print(self.__overlords)
         self.__sockets = [context.socket(zmq.REQ)
-                          for _ in range(len(self.__overloads))]
+                          for _ in range(len(self.__overlords))]
         init_socket.disconnect(self.__init_address)
-        for i, overload in enumerate(self.__overloads):
-            self.__sockets[i].connect('tcp://{0}'.format(overload))
+        for i, overlord in enumerate(self.__overlords):
+            self.__sockets[i].connect('tcp://{0}'.format(overlord))
         self.__is_connected = True
 
     def __disconnect(self):
@@ -50,7 +50,7 @@ class Connection:
                 except:
                     pass
 
-    def __get_overload_location_by_key(self, key):
+    def __get_overlord_location_by_key(self, key):
         if not self.connected:
             self.__connect()
         if len(self.__sockets) <= 0:

@@ -17,8 +17,8 @@ def _after_processor(cmd):
 
 class Command:
     @classmethod
-    @_after_processor('get_overloads')
-    def get_overloads_list(cls):
+    @_after_processor('get_overlords')
+    def get_overlords_list(cls):
         return None
 
     @classmethod
