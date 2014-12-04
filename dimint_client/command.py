@@ -40,6 +40,11 @@ class Command:
         }
 
     @classmethod
+    @_after_processor('state')
+    def get_state(cls):
+        return None
+
+    @classmethod
     def __validate_key(cls, key):
         if not (isinstance(key, (int, float, str, bool)) or key is None):
             raise KeyError('Key must be immutable')

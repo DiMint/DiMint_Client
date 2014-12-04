@@ -21,6 +21,10 @@ class DiMintClient:
         result = self.__connection.set(key, value)
         return result
 
+    def state(self):
+        result = self.__connection.state()
+        return result['state']
+
     def __getitem__(self, key):
         return self.get(key)
 

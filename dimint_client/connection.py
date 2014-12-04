@@ -28,6 +28,13 @@ class Connection:
         result = self.__sockets[loc].recv()
         return json.loads(result.decode('utf-8'))
 
+    def state(self):
+        cmd = Command.get_state()
+        loc = self.__get_overlord_location_by_key(key)
+        self.__sockets[loc].send(cmd)
+        result = self.__sockets[loc].recv()
+        return json.loads(result.decode('utf-8'))
+
     def __connect(self):
         context = zmq.Context()
         init_socket = context.socket(zmq.REQ)
