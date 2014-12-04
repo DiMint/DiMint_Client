@@ -3,7 +3,7 @@ import json
 
 import zmq
 
-from dimint.command import Command
+from dimint_client.command import Command
 
 
 class Connection:

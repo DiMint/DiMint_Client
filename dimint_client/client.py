@@ -1,4 +1,4 @@
-from dimint.connection import Connection
+from dimint_client.connection import Connection
 
 
 class DiMintClient:
