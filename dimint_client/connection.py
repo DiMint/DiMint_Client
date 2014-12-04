@@ -16,24 +16,15 @@ class Connection:
 
     def get(self, key):
         cmd = Command.get_by_key(key)
-        loc = self.__get_overlord_location_by_key(key)
-        self.__sockets[loc].send(cmd)
-        value = self.__sockets[loc].recv()
-        return json.loads(value.decode('utf-8'))
+        return self.__send(cmd)
 
     def set(self, key, value):
         cmd = Command.set_value(key, value)
-        loc = self.__get_overlord_location_by_key(key)
-        self.__sockets[loc].send(cmd)
-        result = self.__sockets[loc].recv()
-        return json.loads(result.decode('utf-8'))
+        return self.__send(cmd)
 
     def state(self):
         cmd = Command.get_state()
-        loc = self.__get_overlord_location_by_key(key)
-        self.__sockets[loc].send(cmd)
-        result = self.__sockets[loc].recv()
-        return json.loads(result.decode('utf-8'))
+        return self.__send(cmd)
 
     def __connect(self):
         context = zmq.Context()
@@ -56,6 +47,11 @@ class Connection:
                     socket.disconnect()
                 except:
                     pass
+
+    def __send(self, command):
+        loc = self.__get_overlord_location_by_key(key)
+        self.__sockets[loc].send(cmd)
+        return json.loads(self.__sockets[loc].recv().decode('utf-8'))
 
     def __get_overlord_location_by_key(self, key):
         if not self.connected:
