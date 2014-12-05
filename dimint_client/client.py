@@ -14,7 +14,6 @@ class DiMintClient:
         try:
             return self.__connection.get(key)
         except Exception as e:
-            print(e)
             return default
 
     def set(self, key, value):

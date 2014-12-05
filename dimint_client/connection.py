@@ -30,11 +30,9 @@ class Connection:
         context = zmq.Context()
         init_socket = context.socket(zmq.DEALER)
         init_socket.connect(self.__init_address)
-        print('before send')
         init_socket.send_json(Command.get_overlords_list())
-        print('after send')
         self.__overlords = init_socket.recv_json()['overlords']
-        print(self.__overlords)
+
         self.__sockets = [context.socket(zmq.DEALER)
                           for _ in range(len(self.__overlords))]
         init_socket.disconnect(self.__init_address)
