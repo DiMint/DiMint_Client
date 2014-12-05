@@ -10,7 +10,7 @@ def _after_processor(cmd):
             if result is None:
                 result = {}
             result['cmd'] = cmd
-            return json.dumps(result).encode('utf-8')
+            return result
         return return_func
     return wrap
 

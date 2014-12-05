@@ -28,12 +28,14 @@ class Connection:
 
     def __connect(self):
         context = zmq.Context()
-        init_socket = context.socket(zmq.REQ)
+        init_socket = context.socket(zmq.DEALER)
         init_socket.connect(self.__init_address)
-        init_socket.send(Command.get_overlords_list())
-        self.__overlords = json.loads(init_socket.recv().decode('utf-8'))['overlords']
+        print('before send')
+        init_socket.send_json(Command.get_overlords_list())
+        print('after send')
+        self.__overlords = init_socket.recv_json()['overlords']
         print(self.__overlords)
-        self.__sockets = [context.socket(zmq.REQ)
+        self.__sockets = [context.socket(zmq.DEALER)
                           for _ in range(len(self.__overlords))]
         init_socket.disconnect(self.__init_address)
         for i, overlord in enumerate(self.__overlords):
@@ -50,8 +52,8 @@ class Connection:
 
     def __send(self, command):
         loc = self.__get_overlord_location()
-        self.__sockets[loc].send(command)
-        return json.loads(self.__sockets[loc].recv().decode('utf-8'))
+        self.__sockets[loc].send_json(command)
+        return self.__sockets[loc].recv_json()
 
     def __get_overlord_location(self):
         if not self.connected:
