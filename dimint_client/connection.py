@@ -1,5 +1,5 @@
-from hashlib import sha1
 import json
+import random
 
 import zmq
 
@@ -49,17 +49,16 @@ class Connection:
                     pass
 
     def __send(self, command):
-        loc = self.__get_overlord_location_by_key(key)
-        self.__sockets[loc].send(cmd)
+        loc = self.__get_overlord_location()
+        self.__sockets[loc].send(command)
         return json.loads(self.__sockets[loc].recv().decode('utf-8'))
 
-    def __get_overlord_location_by_key(self, key):
+    def __get_overlord_location(self):
         if not self.connected:
             self.__connect()
         if len(self.__sockets) <= 0:
             raise Exception
-        hex_data = int(sha1(json.dumps(key).encode('utf-8')).hexdigest(), 16)
-        return hex_data % len(self.__sockets)
+        return random.randint(0, 2**31-1) % len(self.__sockets)
 
     def __del__(self):
         self.__disconnect()
