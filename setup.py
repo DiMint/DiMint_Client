@@ -3,9 +3,9 @@ from setuptools import setup
 setup(
     name='dimint-client',
     packages=[
-        'dimint',
+        'dimint_client',
     ],
-    version='0.1',
+    version='0.0.1',
     description='Python client for DiMint, distributed key-value storage',
     url='https://github.com/DiMint/DiMint_Client',
     author='Kim Jae Chan',
