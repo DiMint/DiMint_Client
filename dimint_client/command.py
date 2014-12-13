@@ -35,7 +35,7 @@ class Command:
         cls.__validate_key(key)
         cls.__validate_value(value)
         return {
-            'key': key,
+            'key': str(key),
             'value': value,
         }
 
