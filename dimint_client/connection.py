@@ -25,6 +25,10 @@ class Connection:
         cmd = Command.get_state()
         return self.__send(cmd)
 
+    def overlord_state(self):
+        cmd = Command.get_overlord_state()
+        return self.__send(cmd)
+
     def __connect(self):
         context = zmq.Context()
         init_socket = context.socket(zmq.DEALER)

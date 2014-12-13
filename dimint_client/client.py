@@ -24,6 +24,10 @@ class DiMintClient:
         result = self.__connection.state()
         return result
 
+    def overlord_state(self):
+        result = self.__connection.overlord_state()
+        return result
+
     def __getitem__(self, key):
         return self.get(key)
 

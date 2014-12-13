@@ -9,3 +9,5 @@ if __name__ == "__main__":
     print(c1['key1'])
     print(c2['key2'])
     print(c2.state())
+    print(c1.overlord_state())
+    print(c2.overlord_state())
