@@ -2,10 +2,13 @@
 
 ## Installation
 ```
-pip install -e git+git://github.com/DiMint/DiMint_Client@master#egg=dimint_client.egg
+$ virtualenv -p /usr/bin/python3 myenv
+$ source myenv/bin/activate
+$ pip install -e git+git://github.com/DiMint/DiMint_Client@master#egg=dimint_client.egg
+$ deactivate
 ```
 ## How to use
-```python
+```
 from dimint_client import DiMintClient
 
 dimint = DiMintdimint('127.0.0.1', 5556)
