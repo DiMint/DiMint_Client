@@ -36,13 +36,11 @@ class Connection:
         init_socket.send_json(Command.get_overlords_list())
         result = init_socket.recv_json()
         self.__overlords = result['overlords']
-        self.identity = result['identity']
 
         self.__sockets = [context.socket(zmq.DEALER)
                           for _ in range(len(self.__overlords))]
         init_socket.disconnect(self.__init_address)
         for i, overlord in enumerate(self.__overlords):
-            self.__sockets[i].identity = str(self.identity).encode('utf-8')
             self.__sockets[i].connect('tcp://{0}'.format(overlord))
         self.__is_connected = True
 
