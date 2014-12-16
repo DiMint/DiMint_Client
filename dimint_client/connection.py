@@ -17,6 +17,10 @@ class Connection:
         cmd = Command.get_by_key(key)
         return self.__send(cmd)
 
+    def get_strong(self, key):
+        cmd = Command.get_by_key(key, True)
+        return self.__send(cmd)
+
     def set(self, key, value):
         cmd = Command.set_value(key, value)
         return self.__send(cmd)
@@ -61,7 +65,7 @@ class Connection:
             self.__connect()
         if len(self.__sockets) <= 0:
             raise Exception
-        return random.randint(0, 2**31-1) % len(self.__sockets)
+        return random.randint(0, (2 ** 31) - 1) % len(self.__sockets)
 
     def __del__(self):
         self.__disconnect()

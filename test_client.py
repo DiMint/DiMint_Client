@@ -1,5 +1,4 @@
 from dimint_client import DiMintClient
-import time
 
 c = DiMintClient('127.0.0.1', '5556')
 
@@ -11,3 +10,8 @@ for i in range(1, 5000):
 print("Get")
 for i in range(1, 5000):
     print('storage[key_{0}] = {1}'.format(i, c['key_{0}'.format(i)]))
+
+print("Strong Get")
+for i in range(1, 5000):
+    print('storage.get_strong(key_{0}) = {1}'.format(
+        i, c.get_strong('key_{0}'.format(i))))

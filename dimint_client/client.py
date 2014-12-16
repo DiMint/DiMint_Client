@@ -16,6 +16,12 @@ class DiMintClient:
         except Exception as e:
             return default
 
+    def get_strong(self, key, default=None):
+        try:
+            return self.__connection.get_strong(key)
+        except Exception as e:
+            return default
+
     def set(self, key, value):
         result = self.__connection.set(key, value)
         return result

@@ -23,10 +23,11 @@ class Command:
 
     @classmethod
     @_after_processor('get')
-    def get_by_key(cls, key):
+    def get_by_key(cls, key, is_strong=False):
         cls.__validate_key(key)
         return {
             'key': key,
+            'consistency': "strong" if is_strong else "week",
         }
 
     @classmethod
