@@ -36,6 +36,7 @@ class Connection:
     def __connect(self):
         context = zmq.Context()
         init_socket = context.socket(zmq.DEALER)
+        init_socket.setsockopt(zmq.RCVTIMEO, 3000)
         init_socket.connect(self.__init_address)
         init_socket.send_json(Command.get_overlords_list())
         result = init_socket.recv_json()
